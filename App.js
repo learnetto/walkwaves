@@ -3,17 +3,26 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      coords: '51.5074, 0.1278',
+      address: ''
+    };
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Walkwaves</Text>
         <FormLabel style={{padding: 20}}>Enter Co-ordinates (latitude, longitude)</FormLabel>
-        <FormInput containerStyle={styles.input} />
+        <FormInput containerStyle={styles.input}
+          onChangeText={(coords) => this.setState({coords})}
+        />
         <Button title='Geocode'
           buttonStyle={styles.button}
-          color='#FFFFFF'
-        />
-        <Text style={styles.result}>Human understandable address</Text>
+          color='#FFFFFF' />
+        <Text style={styles.result}>{this.state.address}</Text>
       </View>
     );
   }
@@ -21,8 +30,7 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#F3F3F3',
+    marginTop: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },
