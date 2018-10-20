@@ -1,14 +1,26 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
+import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
+import opencage from 'opencage-api-client';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       coords: '51.5074, 0.1278',
-      address: ''
+      address: '',
+      geocoding: false
     };
+  }
+
+  reverseGeocode = () => {
+    const key = 'YOUR_API_KEY';
+    this.setState({geocoding: true});
+    opencage.geocode({ key, q: this.state.coords }).then(response => {
+      result = response.results[0];
+      console.log(result.formatted);
+      this.setState({address: result.formatted, geocoding: false});
+    });
   }
 
   render() {
@@ -20,8 +32,12 @@ export default class App extends React.Component {
           onChangeText={(coords) => this.setState({coords})}
         />
         <Button title='Geocode'
+          loading={this.state.geocoding}
           buttonStyle={styles.button}
-          color='#FFFFFF' />
+          title={this.state.geocoding ? "Geocoding..." : "Geocode"}
+          color='#FFFFFF'
+          onPress={this.reverseGeocode}
+        />
         <Text style={styles.result}>{this.state.address}</Text>
       </View>
     );
